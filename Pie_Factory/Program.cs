@@ -164,11 +164,13 @@ namespace Pie_Factory
 
                     do
                     {
-                        lock (Lock)
+                        progressInPercentage = filling * 100 / hopperMaxAmount;
+                        if (progressInPercentage < pfp)
                         {
-                            filling += 100;
-                        }
-                            progressInPercentage = filling * 100 / hopperMaxAmount;
+                            lock (Lock)
+                            {
+                                filling += 100;
+                            }
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Joe is filling the filling ingredient, because of it's insufficient amount.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -176,6 +178,11 @@ namespace Pie_Factory
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"His progress at loading the filling is {progressInPercentage} % out of {pfp} % which Joe set for himself.");
                             Thread.Sleep(1000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                         
                     }
                     while (progressInPercentage < pfp);
@@ -188,11 +195,13 @@ namespace Pie_Factory
 
                     do
                     {
-                        lock (Lock)
+                        progressInPercentage = flavor * 100 / hopperMaxAmount;
+                        if (progressInPercentage < pfp)
                         {
-                            flavor += 100;
-                        }
-                            progressInPercentage = flavor * 100 / hopperMaxAmount;
+                            lock (Lock)
+                            {
+                                flavor += 100;
+                            }
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Joe is filling the flavor ingredient, because of it's insufficient amount.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -200,6 +209,11 @@ namespace Pie_Factory
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"His progress at loading the flavor is {progressInPercentage} % out of {pfp} % which Joe set for himself.");
                             Thread.Sleep(1000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                         
                     }
                     while (progressInPercentage < pfp);
@@ -212,11 +226,14 @@ namespace Pie_Factory
 
                     do
                     {
-                        lock (Lock)
+                        progressInPercentage = topping * 100 / hopperMaxAmount;
+                        if (progressInPercentage < pfp)
                         {
-                            topping += 100;
-                        }
-                            progressInPercentage = topping * 100 / hopperMaxAmount;
+                            lock (Lock)
+                            {
+                                topping += 100;
+                            }
+
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Joe is filling the topping ingredient, because of it's insufficient amount.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -224,6 +241,11 @@ namespace Pie_Factory
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"His progress at loading the topping is {progressInPercentage} % out of {pfp} % which Joe set for himself.");
                             Thread.Sleep(1000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     while (progressInPercentage < pfp);
                 }
@@ -278,11 +300,11 @@ namespace Pie_Factory
         private static void RevisionAnnouncer(object source, ElapsedEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($" *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
+            Console.WriteLine($"{Environment.NewLine} *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($" Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr.");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(" *** Next revision in 10 seconds. ***");
+            Console.WriteLine($" *** Next revision in 10 seconds. ***{Environment.NewLine}");
         }
 
         static void Main(string[] args)
@@ -311,11 +333,11 @@ namespace Pie_Factory
                         if (key.KeyChar == 'S')
                         {
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine($" *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
+                            Console.WriteLine($"{Environment.NewLine} *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine($" Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr.");
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine(" *** Next revision in 10 seconds. ***");
+                            Console.WriteLine($" *** Next revision in 10 seconds. ***{Environment.NewLine}");
 
                             timer.Enabled = true;
 
