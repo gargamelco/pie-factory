@@ -109,7 +109,7 @@ namespace Pie_Factory
                         filling -= 250;
                     }
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Lucy just dispensed 250 gr of filling for a pie - 10 ms to next dispense");
+                        Console.WriteLine("Lucy just dispensed 250 gr of filling for a pie - 1 sec to next dispense");
                         Thread.Sleep(1000);
 
                     lock (Lock)
@@ -117,7 +117,7 @@ namespace Pie_Factory
                         flavor -= 10;
                     }
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Lucy just dispensed 10 gr of flavor for a pie - 10 ms to next dispense");
+                        Console.WriteLine("Lucy just dispensed 10 gr of flavor for a pie - 1 sec to next dispense");
                         Thread.Sleep(1000);
 
                     lock (Lock)
@@ -125,7 +125,7 @@ namespace Pie_Factory
                         topping -= 100;
                     }
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Lucy just dispensed 100 gr of topping for a pie - 10 ms to use the pie crust");
+                        Console.WriteLine("Lucy just dispensed 100 gr of topping for a pie - 1 sec to use the pie crust");
                         Thread.Sleep(1000);
 
                     lock (Lock)
@@ -181,6 +181,8 @@ namespace Pie_Factory
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Joe has reached his norm with filling the filling ingredient.");
                             break;
                         }
                         
@@ -212,6 +214,8 @@ namespace Pie_Factory
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Joe has reached his norm with filling the flavor ingredient.");
                             break;
                         }
                         
@@ -244,6 +248,8 @@ namespace Pie_Factory
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Joe has reached his norm with filling the topping ingredient.");
                             break;
                         }
                     }
@@ -302,7 +308,7 @@ namespace Pie_Factory
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"{Environment.NewLine} *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($" Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr.");
+            Console.WriteLine($" *** Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr. ***");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($" *** Next revision in 10 seconds. ***{Environment.NewLine}");
         }
@@ -320,8 +326,8 @@ namespace Pie_Factory
 
             var cts = new CancellationTokenSource();
 
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("To start the pie factory press S. To stop the factory press X.");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($" <<< To start The Pie Factory press S. To stop The Pie Factory press X. >>> {Environment.NewLine}");
 
             while (true)
             {
@@ -335,7 +341,7 @@ namespace Pie_Factory
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine($"{Environment.NewLine} *** Current revision of the amounts of the ingredients at {DateTime.Now.ToString("h:mm:ss tt")}. ***");
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine($" Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr.");
+                            Console.WriteLine($" *** Filling: {filling} gr., Flavor {flavor} gr., Topping {topping} gr. ***");
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine($" *** Next revision in 10 seconds. ***{Environment.NewLine}");
 
@@ -347,6 +353,9 @@ namespace Pie_Factory
                         }
                         else if (key.KeyChar == 'X')
                         {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"{Environment.NewLine} <<< Please wait until all threads are cancelled safely! >>> {Environment.NewLine}");
+
                             timer.Enabled = false;
                             cts.Cancel();
 
@@ -354,15 +363,15 @@ namespace Pie_Factory
                             lucy.Join();
                             joe.Join();
 
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("All threads have been terminated!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"{Environment.NewLine} <<< All threads have been successfully cancelled! >>> {Environment.NewLine}");
                         }
                     }
                 }
                 catch (ThreadStateException e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine("The program has been terminated, please restart in order to execute again!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($"{Environment.NewLine} <<< The program has been terminated, please restart in order to execute again! >>> {Environment.NewLine}");
                 }
              }
          }
