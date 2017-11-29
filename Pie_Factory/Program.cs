@@ -3,15 +3,15 @@ using System.Threading;
 using System.Timers;
 
     /*
-        Pie Factory: pies are made from three components: filling, flavor and topping, each dispensed(освобождава) 
-        from a respective hopper(контейнер) with one of these three ingredients.
+        Pie Factory: pies are made from three components: filling, flavor and topping, each dispensed 
+        from a respective hopper with one of these three ingredients.
 
         Robot Lucy:
-        Adds the three ingredients to empty crusts(форми) that move on a conveyor belt.
+        Adds the three ingredients to empty crusts that move on a conveyor belt.
         Can pause the conveyor belt if a ingredient is depleted(изчерпан).
 
         Robot Joe:
-        Fills the hoppers(контейнери) with the respective ingredient.
+        Fills the hoppers with the respective ingredient.
         Makes sure hoppers are not overfull.
         Makes sure hoppers do not go empty.
 
@@ -47,7 +47,7 @@ namespace Pie_Factory
 {
     class Program
     {
-        static ManualResetEvent pauseBelt = new ManualResetEvent(false);
+        static AutoResetEvent pauseBelt = new AutoResetEvent(false);
 
         const int beltSpeed = 5000;
         const int dispenseTime = 1000;
