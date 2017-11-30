@@ -3,12 +3,13 @@ using System.Threading;
 using System.Timers;
 
     /*
+        TASK: 
         Pie Factory: pies are made from three components: filling, flavor and topping, each dispensed 
         from a respective hopper with one of these three ingredients.
 
         Robot Lucy:
         Adds the three ingredients to empty crusts that move on a conveyor belt.
-        Can pause the conveyor belt if a ingredient is depleted(изчерпан).
+        Can pause the conveyor belt if a ingredient is depleted.
 
         Robot Joe:
         Fills the hoppers with the respective ingredient.
@@ -47,20 +48,26 @@ namespace Pie_Factory
 {
     class Program
     {
+        //Definitions
+
+        //autoresetevent for Lucy to pause the Conveyour Belt Thread
         static AutoResetEvent pauseBelt = new AutoResetEvent(false);
 
+        //variables from the task
         const int beltSpeed = 5000;
         const int dispenseTime = 1000;
         const int hopperMaxAmount = 2000;
         const int hopperFillingSpeed = 1000;
 
+        //starting amounts of the ingredients are random everytime
         static Random startingAmount = new Random();
         static int filling = startingAmount.Next(0, 2000);
         static int flavor = startingAmount.Next(0, 2000);
         static int topping = startingAmount.Next(0, 2000);
 
         static int pieCrust = 0;
-
+        
+        //some boolean vars to check speach and other
         static bool pauseConveyorBelt = false;
         static bool lucyWaitsStopTalk = false;
         static bool lucyPausedBeltStopTalk = false;
@@ -80,13 +87,14 @@ namespace Pie_Factory
                     return;
                 }
 
+                //checking if we have enough amounts of the 3 ingredients for one pie
                 if (filling < 250 || flavor < 10 || topping < 100)
                 {
                     pauseConveyorBelt = true;
                 }
-                else if (pieCrust < 1)
+                else if (pieCrust < 1) //then checking if we have pie crust on the belt available
                 {
-                    if (!lucyWaitsStopTalk)
+                    if (!lucyWaitsStopTalk) //if Lucy said her speach once then she waits silently
                     {
                         pauseConveyorBelt = false;
                         pauseBelt.Set();
@@ -100,6 +108,7 @@ namespace Pie_Factory
                         pauseBelt.Set();
                     }
                 }
+                //if everything is in tact then we proceed with dispensing the ingredients
                 else
                 {
                     lucyWaitsStopTalk = false;
@@ -143,9 +152,16 @@ namespace Pie_Factory
         {
             CancellationToken token = (CancellationToken)tag;
 
+            // variables for minimum amounts in the hopper before Joe to start to fill them
             int fillingMinAmount = 250;
             int flavorMinAmount = 10;
             int toppingMinAmount = 100;
+            
+            /* 
+            variable which Joe will need to check his progress. 
+            He sets for himself a goal everytime when there's to fill a hopper.
+            It is a percentage.
+            */
             int progressInPercentage;
 
             while (true)
@@ -157,9 +173,12 @@ namespace Pie_Factory
                     return;
                 }
 
+                //checking minimum amounts in the hoppers
                 if (filling < fillingMinAmount)
                 {
+                    //everytime his goal is different. This is to complete task's condition - filling a hopper only partially.
                     Random partialFillPercentage = new Random();
+                    //it's between 50 and 100 %
                     int pfp = partialFillPercentage.Next(50, 100);
 
                     do
@@ -172,7 +191,7 @@ namespace Pie_Factory
                                 filling += 100;
                             }
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("Joe is filling the filling ingredient, because of it's insufficient amount.");
+                            Console.WriteLine("Joe is filling the filling ingredient, because of it's insufficient amount. Filling + 100 gr");
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"Current amount of filling: {filling} gr");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -205,7 +224,7 @@ namespace Pie_Factory
                                 flavor += 100;
                             }
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("Joe is filling the flavor ingredient, because of it's insufficient amount.");
+                            Console.WriteLine("Joe is filling the flavor ingredient, because of it's insufficient amount. Flavor + 100 gr");
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"Current amount of flavor: {flavor} gr");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -239,7 +258,7 @@ namespace Pie_Factory
                             }
 
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("Joe is filling the topping ingredient, because of it's insufficient amount.");
+                            Console.WriteLine("Joe is filling the topping ingredient, because of it's insufficient amount. Topping + 100 gr.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"Current amount of topping: {topping} gr");
                             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -271,6 +290,7 @@ namespace Pie_Factory
                     return;
                 }
 
+                //if conveyor belt is not paused then it releases its crusts every 5 seconds
                 if (!pauseConveyorBelt)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -280,14 +300,14 @@ namespace Pie_Factory
                     {
                         pieCrust += 1;
                     }
-
                         lucyPausedBeltStopTalk = false;
-                        pauseBelt.Set();
                         Thread.Sleep(5000);
                     
                 }
+                //if its paused then this thread will wait.. until Lucy starts it
                 else
                 {
+                    //this check is need to make sure Lucy will stop spamming that she paused the belt after she said it once
                     if (!lucyPausedBeltStopTalk)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -303,6 +323,7 @@ namespace Pie_Factory
             }
         }
 
+        //Method which will announce the current amount of ingredients at a time for our reference.
         private static void RevisionAnnouncer(object source, ElapsedEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -315,6 +336,7 @@ namespace Pie_Factory
 
         static void Main(string[] args)
         {
+            //timer for our announcer
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Elapsed += new ElapsedEventHandler(RevisionAnnouncer);
             timer.Interval = 10000;
@@ -328,7 +350,8 @@ namespace Pie_Factory
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($" <<< To start The Pie Factory press S. To stop The Pie Factory press X. >>> {Environment.NewLine}");
-
+            
+            //we can start and stop our factory with key press
             while (true)
             {
                 try
@@ -354,7 +377,7 @@ namespace Pie_Factory
                         else if (key.KeyChar == 'X')
                         {
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine($"{Environment.NewLine} <<< Please wait until all threads are cancelled safely! >>> {Environment.NewLine}");
+                            Console.WriteLine($"{Environment.NewLine} <<< Please wait until all threads are done with their jobs and are cancelled safely! >>> {Environment.NewLine}");
 
                             timer.Enabled = false;
                             cts.Cancel();
